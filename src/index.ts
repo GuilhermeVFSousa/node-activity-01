@@ -8,11 +8,11 @@ const productRepository: ProductRepository = new ProductRepository();
 async function run() {
   try {
     const products = await productRepository.getProducts();
-
     const filteredProducts = await products.filter(isCategoryValid);
+    
+    await productRepository.saveOnFile(filteredProducts, 'processedProducts.json');
 
-    console.log(filteredProducts)
-
+    console.log('Products processed successfully');
   } catch (error) {
     throw error;
   }
