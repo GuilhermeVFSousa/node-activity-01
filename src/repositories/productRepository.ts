@@ -4,14 +4,17 @@ import ProductList from '../entities/productList';
 import Product from '../entities/product';
 
 export default class ProductRepository {
-    private filePath: string;
+    private inputFolder: string;
+    private outputFolder: string;
+
 
     constructor() {
-        this.filePath = path.resolve('..', 'base/products.json');
+        this.inputFolder = path.resolve('..', 'base');
+        this.outputFolder = path.resolve('..', 'output');
     }
 
     async getProducts() {
-        const data = await promises.readFile(this.filePath);
+        const data = await promises.readFile(path.join(this.inputFolder, 'products.json'));
         const productsAsJson = JSON.parse(data.toString());
 
         const products = new ProductList();
@@ -27,5 +30,10 @@ export default class ProductRepository {
             products.push(product);
         }
         return products;
+    }
+
+    async saveOnFile(products: ProductList, filePath: string) {
+        const data = JSON.stringify(products.toOutputFormat());
+        await promises.writeFile(path.join(this.outputFolder, filePath), data);
     }
 }
