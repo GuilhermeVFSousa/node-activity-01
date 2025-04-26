@@ -9,8 +9,8 @@ export default class ProductRepository {
 
 
     constructor() {
-        this.inputFolder = path.resolve('..', 'base');
-        this.outputFolder = path.resolve('..', 'output');
+        this.inputFolder = path.resolve('base');
+        this.outputFolder = path.resolve('output');
     }
 
     async getProducts() {
