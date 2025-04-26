@@ -1,12 +1,33 @@
 
-import {ProductCategory} from "skeleton/dist/types";
+import axios from "axios";
+import ProductRepository from "./repositories/productRepository";
+import Product from "./entities/product";
 
-const world = 'world';
+const productRepository: ProductRepository = new ProductRepository();
 
-export function hello(who: string = world): string {
-  return `Hello ${who}! `;
+async function run() {
+  try {
+    const products = await productRepository.getProducts();
+
+    const filteredProducts = await products.filter(isCategoryValid);
+
+    console.log(filteredProducts)
+
+  } catch (error) {
+    throw error;
+  }
 }
 
-console.log(hello());
+async function isCategoryValid(product: Product) : Promise<boolean> {
+  try {
+    const response = await axios.get(`https://posdesweb.igormaldonado.com.br/api/allowedCategory?category=${product.getCategory().valueOf()}`);
+    return response.data.allowed;
+  } catch (error) {
+    console.log('Request error', error);
+    return false;
+  }
+}
 
-const a: ProductCategory = ProductCategory.Moda;
+run();
+
+export default run;
